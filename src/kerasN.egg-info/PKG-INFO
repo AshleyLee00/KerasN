@@ -1,0 +1,125 @@
+Metadata-Version: 2.1
+Name: kerasN
+Version: 0.3.0
+Summary: A Neural Network Implementation in Python
+Home-page: https://github.com/yourusername/kerasN
+Author: Yeseol Lee
+Author-email: your.email@example.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: numpy>=1.19.2
+Requires-Dist: matplotlib>=3.3.0
+Requires-Dist: scikit-learn>=0.24.0
+Requires-Dist: pytest>=6.0.0
+Requires-Dist: tqdm>=4.50.0
+Requires-Dist: pandas
+
+# KerasN
+
+KerasN은 순수 Python/NumPy로 구현된 간단한 딥러닝 프레임워크입니다. Keras와 유사한 API를 제공하여 직관적인 딥러닝 모델 구현이 가능합니다.
+
+## 설치 방법
+
+```bash
+git clone https://github.com/yourusername/KerasN.git
+cd KerasN
+pip install -e .
+```
+
+## 주요 기능
+
+- Sequential 모델 API
+- 다양한 레이어 지원 (Dense, Conv2D, MaxPool2D, Flatten, BatchNormalization 등)
+- 콜백 시스템 (EarlyStopping)
+- 데이터셋 로더 (MNIST, Fashion-MNIST, CIFAR-10, Digits 등)
+- 학습 과정 시각화
+
+## 예제
+
+### MNIST 손글씨 숫자 분류
+
+```python
+from kerasN.models import Sequential
+from kerasN.layers import Dense, Conv2D, MaxPool2D, Flatten, BatchNormalization, Input
+from kerasN.callbacks import EarlyStopping
+from kerasN.datasets import load_data
+from kerasN.utils import to_categorical, train_test_split, evaluate
+
+# 데이터 로드
+X, y = load_data('mnist', normalize=True, reshape_to_image=True)
+y = to_categorical(y)
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+
+# 모델 정의
+model = Sequential([
+    Input(shape=(28, 28, 1)),
+    Conv2D(32, kernel_size=3, activation='relu'),
+    BatchNormalization(),
+    MaxPool2D(pool_size=2),
+    Flatten(),
+    Dense(128, activation='relu'),
+    Dense(10, activation='softmax')
+])
+
+# 모델 컴파일 & 학습
+model.compile(loss='categorical_crossentropy', learning_rate=0.001)
+history = model.fit(X_train, y_train, 
+                   epochs=50,
+                   batch_size=32,
+                   validation_split=0.2)
+```
+
+## 지원하는 데이터셋
+
+- MNIST (손글씨 숫자)
+- Fashion-MNIST (의류 이미지)
+- CIFAR-10 (컬러 이미지)
+- Digits (8x8 손글씨 숫자)
+
+## 요구사항
+
+- Python >= 3.7
+- NumPy >= 1.19.2
+- Matplotlib >= 3.3.2
+- scikit-learn >= 0.23.2
+- pandas >= 1.2.0
+- tqdm >= 4.50.2
+
+## 예제 실행
+
+examples 디렉토리에 다양한 예제가 포함되어 있습니다:
+
+```bash
+python examples/mnist_example.py
+python examples/fashion_mnist_example.py
+python examples/cifar10_example.py
+python examples/digits_example.py
+```
+
+## 프로젝트 구조
+
+```
+KerasN/
+├── src/
+│   └── kerasN/
+│       ├── layers/       # 신경망 레이어 구현
+│       ├── models/       # Sequential 모델 구현
+│       ├── callbacks/    # 콜백 시스템
+│       ├── datasets/     # 데이터셋 로더
+│       └── utils/        # 유틸리티 함수
+├── examples/             # 예제 코드
+├── tests/               # 테스트 코드
+├── setup.py            # 설치 설정
+└── README.md           # 문서
+```
+
+## 라이선스
+
+MIT License
+
+## 기여하기
+
+버그 리포트, 기능 제안, 풀 리퀘스트를 환영합니다.
